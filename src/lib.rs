@@ -11,11 +11,11 @@
 /// They first fetch the variable from `.env`, if not available it fetches from system variables, and if all fails it asks the user at run time.
 #[macro_export]
 macro_rules! macro_env {
-    (File, $environmentname:literal) => {{
-        envreader($environmentname.to_string()).unwrap()
+    (File, $envvariablename:literal) => {{
+        dotenvreader($envvariablename.to_string()).unwrap()
     }};
-    (System, $environmentname:literal) => {
-        std::env::var($environmentname).unwrap()
+    (System, $envvariablename:literal) => {
+        std::env::var($envvariablename).unwrap()
     };
     (Input) => {{
         let mut input = String::new();
@@ -24,12 +24,12 @@ macro_rules! macro_env {
         input = input.trim().to_string();
         input
     }};
-    (All, $environmentname:literal) => {{
-        let resultenv = envreader($environmentname.to_string());
+    (All, $envvariablename:literal) => {{
+        let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if std::env::var($environmentname).is_ok() {
-            std::env::var($environmentname).unwrap()
+        } else if std::env::var($envvariablename).is_ok() {
+            std::env::var($envvariablename).unwrap()
         } else {
             let mut input = String::new();
             println!("Please enter an environment variable");
@@ -37,12 +37,12 @@ macro_rules! macro_env {
             input.trim().to_string()
         }
     }};
-    ($environmentname:literal) => {{
-        let resultenv = envreader($environmentname.to_string());
+    ($envvariablename:literal) => {{
+        let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if std::env::var($environmentname).is_ok() {
-            std::env::var($environmentname).unwrap()
+        } else if std::env::var($envvariablename).is_ok() {
+            std::env::var($envvariablename).unwrap()
         } else {
             let mut input = String::new();
             println!("Please enter an environment variable");
@@ -52,7 +52,8 @@ macro_rules! macro_env {
     }};
 }
 
-pub fn envreader(environmentname: String) -> Result<String, std::io::Error> {
+/// Reads the .env files
+pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     let file = std::fs::File::open(".env").unwrap();
     let reader = std::io::BufReader::new(file);
     let mut token = String::new();
@@ -61,7 +62,7 @@ pub fn envreader(environmentname: String) -> Result<String, std::io::Error> {
     for line in reader.lines() {
         if let Ok(line) = line {
             let parts: Vec<&str> = line.splitn(2, '=').collect();
-            if parts.len() == 2 && parts[0] == environmentname && !parts[1].is_empty() {
+            if parts.len() == 2 && parts[0] == envvariablename && !parts[1].is_empty() {
                 token = parts[1].to_string();
             } else {
                 return Err(std::io::Error::new(
