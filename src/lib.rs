@@ -52,7 +52,7 @@ macro_rules! macro_env {
     }};
 }
 
-fn envreader(environmentname: String) -> Result<String, std::io::Error> {
+pub fn envreader(environmentname: String) -> Result<String, std::io::Error> {
     let file = std::fs::File::open(".env").unwrap();
     let reader = std::io::BufReader::new(file);
     let mut token = String::new();
