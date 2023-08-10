@@ -1,4 +1,4 @@
-Macro_env: An environment variable seeking library
+Macro_env: An environment variable seeking crate
 ==================================================
 
 Macro_env is a crate to find environment variables.  
