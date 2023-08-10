@@ -12,7 +12,7 @@ First add:
 
 ```toml
 [dependencies]
-macro_env = "0.1.5"
+macro_env = "0.1.*"
 ```
 
 
@@ -33,7 +33,7 @@ macro_env!(System, "OS");
 // Asks the user for enter the input through the terminal
 macro_env!(Input);
 
-// All, and not specifying the searchtype, will try to find the variable through all 3 methods:
+// All, without specifying the searchtype, will try to find the variable through all 3 methods:
 // First it checks for a .env file
 // Then by searching for a system variable
 // And if both fail, it will ask the user for input

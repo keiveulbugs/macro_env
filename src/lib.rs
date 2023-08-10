@@ -1,14 +1,31 @@
+#![doc = include_str!("../README.md")]
+
+
 /// `macro_env!()` is used to fetch environment variables.
+/// 
+/// # Example
+/// ```rust
+/// // Import the crate, importing the whole crate is the easiest
+/// // You can also manually import the function you need, for .env search for example:
+/// // `use macro_env::dotenvreader;`
+/// use macro_env::*;
+/// 
+/// // Fetch the environment variable "OS" from the .env file at the cargo.toml level
+/// macro_env!(File, "OS");
 ///
-/// `macro_env!(File, "ExampleToken")` fetches a variable from the `.env` at the source folder with the name `ExampleToken`
-///
-/// `macro_env!(System, "ExampleToken")` fetches a variable from the systemvariables with the name `ExampleToken`
-///
-/// `macro_env!(Input)` requests the user for the environment variable at run time.
-///
-/// `macro_env!(All, "ExampleToken")` and `macro_env!("ExampleToken")` both perform all three options.
-///
-/// They first fetch the variable from `.env`, if not available it fetches from system variables, and if all fails it asks the user at run time.
+/// // Fetch the environment variable "OS" from the system environment variables
+/// macro_env!(System, "OS");
+/// 
+/// // Asks the user for enter the input through the terminal
+/// macro_env!(Input);
+/// 
+/// // All, and not specifying the searchtype, will try to find the variable through all 3 methods:
+/// // First it checks for a .env file
+/// // Then by searching for a system variable
+/// // And if both fail, it will ask the user for input
+/// macro_env!(All, "OS");
+/// macro_env!("OS");
+///```
 #[macro_export]
 macro_rules! macro_env {
     (File, $envvariablename:literal) => {{
@@ -42,7 +59,14 @@ macro_rules! macro_env {
     }};
 }
 
-/// Reads the .env files
+/// Reads the .env file and tries to find the .env variable.
+/// 
+/// # Example
+/// ```rust
+/// use macro_env::dotenvreader;
+/// 
+/// let envvariable :String = dotenvreader("OS".to_string()).unwrap();
+/// ```
 pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     let file = std::fs::File::open(".env")?;
     let reader = std::io::BufReader::new(file);
@@ -79,6 +103,15 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
 }
 
 /// Request user input
+/// `input()` fetches stdin.read_lines() and then trims them.
+/// 
+/// # Example
+/// ```rust
+/// use macro_env::input;
+/// 
+/// // Request the user to input a variable
+/// let envvariable :String = input().unwrap();
+/// ```
 pub fn input() -> Result<String, std::io::Error> {
     let mut input = String::new();
     println!("Please enter an environment variable");
@@ -88,6 +121,14 @@ pub fn input() -> Result<String, std::io::Error> {
 }
 
 /// Fetch the environment variable from the system environment variable
+/// 
+/// # Example
+/// ```rust
+/// use macro_env::systemreader;
+/// 
+/// // Using systemreader is just a shortcut for std::env::var()
+/// let envvariable :String = systemreader("OS".to_string()).unwrap();
+/// ```
 pub fn systemreader(envvariablename: String) -> Result<String, std::env::VarError> {
     std::env::var(envvariablename)
 }
@@ -103,7 +144,27 @@ pub enum SearchType {
     All,
 }
 
+
+
 /// A function instead of a macro to find the environment variable
+/// 
+/// # Example
+/// ```rust
+/// use macro_env::*;
+/// use macro_env::SearchType::*;
+/// 
+/// // Fetch a variable from .env
+/// let filevariable :String = envseeker(Envfile, "OS");
+/// 
+/// // Fetch a systemvariable
+/// let systemvariable :String = envseeker(System, "OS");
+/// 
+/// // Request user input
+/// let inputvariable :String = envseeker(Input, "OS");
+/// 
+/// // Perform all three methods to find a variable
+/// let allvariable :String = envseeker(All, "OS"); 
+/// ```
 pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
     match searchtype {
         SearchType::System => systemreader(envvariablename.to_string()).unwrap(),
