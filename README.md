@@ -40,10 +40,7 @@ macro_env!("OS");
 ```rs
 use macro_env::*;
 use macro_env::SearchType::*;
-// You can use envseeker()
+// You can use envseeker() when you prefer using a function over a macro
 envseeker(Envfile, "OS")
-
-
-
 ```
 
