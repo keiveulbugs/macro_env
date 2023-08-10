@@ -1,4 +1,3 @@
-
 /// `macro_env!()` is used to fetch environment variables.
 ///
 /// `macro_env!(File, "ExampleToken")` fetches a variable from the `.env` at the source folder with the name `ExampleToken`
@@ -97,20 +96,14 @@ pub enum SearchType {
     System,
     Input,
     All,
-} 
+}
 
 /// A function instead of a macro to find the environment variable
-pub fn envseeker(searchtype :SearchType, envvariablename: String) -> String {
+pub fn envseeker(searchtype: SearchType, envvariablename: String) -> String {
     match searchtype {
-        SearchType::System => {
-            systemreader(envvariablename).unwrap()
-        },
-        SearchType::File => {
-            dotenvreader(envvariablename).unwrap()
-        },
-        SearchType::Input => {
-            input().unwrap()
-        },
+        SearchType::System => systemreader(envvariablename).unwrap(),
+        SearchType::File => dotenvreader(envvariablename).unwrap(),
+        SearchType::Input => input().unwrap(),
         SearchType::All => {
             let resultenv = dotenvreader(envvariablename.to_string());
             if resultenv.is_ok() {
@@ -120,6 +113,6 @@ pub fn envseeker(searchtype :SearchType, envvariablename: String) -> String {
             } else {
                 input().unwrap()
             }
-        },
+        }
     }
 }
