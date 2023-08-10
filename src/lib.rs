@@ -99,7 +99,7 @@ pub enum SearchType {
     System,
     /// Requesting user input
     Input,
-    /// First searching for a .env file, then search for an system variable, and finally request the user to input one if all fails
+    /// First searching for a .env file, then search for a system variable, and finally request the user to input one if all fails
     All,
 }
 
