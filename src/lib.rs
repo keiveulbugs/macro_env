@@ -91,10 +91,15 @@ pub fn input() -> Result<String, std::io::Error> {
 pub fn systemreader(envvariablename: String) -> Result<String, std::env::VarError> {
     std::env::var(envvariablename)
 }
+/// Searchtype for the `fn envseeker()`, this will define what type of search it performs
 pub enum SearchType {
+    /// Searching for a .env file
     File,
+    /// Searching for a system variable
     System,
+    /// Requesting user input
     Input,
+    /// First searching for a .env file, then search for an system variable, and finally request the user to input one if all fails
     All,
 }
 
