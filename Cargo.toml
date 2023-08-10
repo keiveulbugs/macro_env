@@ -1,6 +1,6 @@
 [package]
 name = "macro_env"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Keiveulbugs"]
 description = "A crate to fetch the environment variable easily through in 3 different ways."
