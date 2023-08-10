@@ -1,3 +1,5 @@
+use std::env::VarError;
+
 /// `macro_env!()` is used to fetch environment variables.
 ///
 /// `macro_env!(File, "ExampleToken")` fetches a variable from the `.env` at the source folder with the name `ExampleToken`
@@ -15,39 +17,29 @@ macro_rules! macro_env {
         dotenvreader($envvariablename.to_string()).unwrap()
     }};
     (System, $envvariablename:literal) => {
-        std::env::var($envvariablename).unwrap()
+        systemreader($envvariablename).unwrap()
     };
-    (Input) => {{
-        let mut input = String::new();
-        println!("Please enter an environment variable");
-        std::io::stdin().read_line(&mut input).unwrap();
-        input = input.trim().to_string();
-        input
+    (Input, $timeout:literal::INTEGER) => {{
+        input().unwrap()
     }};
     (All, $envvariablename:literal) => {{
         let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if std::env::var($envvariablename).is_ok() {
-            std::env::var($envvariablename).unwrap()
+        } else if systemreader($envvariablename).is_ok() {
+            systemreader($envvariablename).unwrap()
         } else {
-            let mut input = String::new();
-            println!("Please enter an environment variable");
-            std::io::stdin().read_line(&mut input).unwrap();
-            input.trim().to_string()
+            input()
         }
     }};
     ($envvariablename:literal) => {{
         let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if std::env::var($envvariablename).is_ok() {
-            std::env::var($envvariablename).unwrap()
+        } else if systemreader($envvariablename).is_ok() {
+            systemreader($envvariablename).unwrap()
         } else {
-            let mut input = String::new();
-            println!("Please enter an environment variable");
-            std::io::stdin().read_line(&mut input).unwrap();
-            input.trim().to_string()
+            input()
         }
     }};
 }
@@ -86,4 +78,16 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     };
 
     Ok(token)
+}
+
+pub fn input() -> Result<String, std::io::Error> {
+    let mut input = String::new();
+    println!("Please enter an environment variable");
+    std::io::stdin().read_line(&mut input)?;
+    input = input.trim().to_string();
+    Ok(input)
+}
+
+pub fn systemreader(envvariablename: String) -> Result<String, std::env::VarError> {
+    std::env::var(envvariablename)
 }

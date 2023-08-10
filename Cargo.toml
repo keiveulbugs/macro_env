@@ -1,8 +1,12 @@
 [package]
 name = "macro_env"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
+authors = ["Keiveulbugs"]
+description = "A crate to fetch the environment variable easily through in 3 different ways."
+readme = "README.md"
+repository = "https://github.com/keiveulbugs/macro_env"
+keywords = ["env", "variable", "macro", "config", "dotenv"]
+categories = ["config"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
