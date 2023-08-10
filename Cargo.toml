@@ -9,6 +9,7 @@ repository = "https://github.com/keiveulbugs/macro_env"
 keywords = ["env", "variable", "macro", "config", "dotenv"]
 categories = ["config"]
 license = "MIT"
-
+documentation = "https://docs.rs/macro_env"
+homepage = "https://github.com/keiveulbugs/macro_env"
 
 
