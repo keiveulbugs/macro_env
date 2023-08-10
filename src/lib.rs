@@ -1,4 +1,3 @@
-use std::env::VarError;
 
 /// `macro_env!()` is used to fetch environment variables.
 ///
