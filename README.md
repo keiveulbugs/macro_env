@@ -8,9 +8,17 @@ By simply chainging the SearchType in the macro or in the function, it fetches t
 
 ## Usage
 
+First add:
+
+```toml
+[dependencies]
+macro_env = "0.1.5"
+```
+
+
 **Macro**
 
-```rs
+```rust
 // Import the crate, importing the whole crate is the easiest
 // You can also manually import the function you need, for .env search for example:
 // `use macro_env::dotenvreader;`
@@ -37,7 +45,7 @@ macro_env!("OS");
 
 **EnvSeeker()**
 
-```rs
+```rust
 use macro_env::*;
 use macro_env::SearchType::*;
 // You can use envseeker() when you prefer using a function over a macro
