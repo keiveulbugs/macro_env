@@ -28,7 +28,7 @@ macro_rules! macro_env {
         } else if systemreader($envvariablename).is_ok() {
             systemreader($envvariablename).unwrap()
         } else {
-            input()
+            input().unwrap()
         }
     }};
     ($envvariablename:literal) => {{
@@ -38,7 +38,7 @@ macro_rules! macro_env {
         } else if systemreader($envvariablename).is_ok() {
             systemreader($envvariablename).unwrap()
         } else {
-            input()
+            input().unwrap()
         }
     }};
 }
@@ -79,6 +79,7 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     Ok(token)
 }
 
+/// Request user input
 pub fn input() -> Result<String, std::io::Error> {
     let mut input = String::new();
     println!("Please enter an environment variable");
@@ -87,6 +88,38 @@ pub fn input() -> Result<String, std::io::Error> {
     Ok(input)
 }
 
+/// Fetch the environment variable from the system environment variable
 pub fn systemreader(envvariablename: String) -> Result<String, std::env::VarError> {
     std::env::var(envvariablename)
+}
+pub enum SearchType {
+    File,
+    System,
+    Input,
+    All,
+} 
+
+/// A function instead of a macro to find the environment variable
+pub fn envseeker(searchtype :SearchType, envvariablename: String) -> String {
+    match searchtype {
+        SearchType::System => {
+            systemreader(envvariablename).unwrap()
+        },
+        SearchType::File => {
+            dotenvreader(envvariablename).unwrap()
+        },
+        SearchType::Input => {
+            input().unwrap()
+        },
+        SearchType::All => {
+            let resultenv = dotenvreader(envvariablename.to_string());
+            if resultenv.is_ok() {
+                resultenv.unwrap()
+            } else if systemreader(envvariablename.clone()).is_ok() {
+                systemreader(envvariablename).unwrap()
+            } else {
+                input().unwrap()
+            }
+        },
+    }
 }
