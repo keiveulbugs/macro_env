@@ -94,7 +94,7 @@ pub fn systemreader(envvariablename: String) -> Result<String, std::env::VarErro
 /// Searchtype for the `fn envseeker()`, this will define what type of search it performs
 pub enum SearchType {
     /// Searching for a .env file
-    File,
+    Envfile,
     /// Searching for a system variable
     System,
     /// Requesting user input
@@ -104,17 +104,17 @@ pub enum SearchType {
 }
 
 /// A function instead of a macro to find the environment variable
-pub fn envseeker(searchtype: SearchType, envvariablename: String) -> String {
+pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
     match searchtype {
-        SearchType::System => systemreader(envvariablename).unwrap(),
-        SearchType::File => dotenvreader(envvariablename).unwrap(),
+        SearchType::System => systemreader(envvariablename.to_string()).unwrap(),
+        SearchType::Envfile => dotenvreader(envvariablename.to_string()).unwrap(),
         SearchType::Input => input().unwrap(),
         SearchType::All => {
             let resultenv = dotenvreader(envvariablename.to_string());
             if resultenv.is_ok() {
                 resultenv.unwrap()
-            } else if systemreader(envvariablename.clone()).is_ok() {
-                systemreader(envvariablename).unwrap()
+            } else if systemreader(envvariablename.to_string().clone()).is_ok() {
+                systemreader(envvariablename.to_string()).unwrap()
             } else {
                 input().unwrap()
             }
