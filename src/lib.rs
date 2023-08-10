@@ -44,7 +44,7 @@ macro_rules! macro_env {
 
 /// Reads the .env files
 pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
-    let file = std::fs::File::open(".env").unwrap();
+    let file = std::fs::File::open(".env")?;
     let reader = std::io::BufReader::new(file);
     let mut token = String::new();
     use std::io::BufRead;
