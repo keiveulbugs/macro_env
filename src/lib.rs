@@ -15,17 +15,17 @@ macro_rules! macro_env {
         dotenvreader($envvariablename.to_string()).unwrap()
     }};
     (System, $envvariablename:literal) => {
-        systemreader($envvariablename).unwrap()
+        systemreader($envvariablename.to_string()).unwrap()
     };
-    (Input, $timeout:literal::INTEGER) => {{
+    (Input) => {{
         input().unwrap()
     }};
     (All, $envvariablename:literal) => {{
         let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if systemreader($envvariablename).is_ok() {
-            systemreader($envvariablename).unwrap()
+        } else if systemreader($envvariablename.to_string()).is_ok() {
+            systemreader($envvariablename.to_string()).unwrap()
         } else {
             input().unwrap()
         }
@@ -34,8 +34,8 @@ macro_rules! macro_env {
         let resultenv = dotenvreader($envvariablename.to_string());
         if resultenv.is_ok() {
             resultenv.unwrap()
-        } else if systemreader($envvariablename).is_ok() {
-            systemreader($envvariablename).unwrap()
+        } else if systemreader($envvariablename.to_string()).is_ok() {
+            systemreader($envvariablename.to_string()).unwrap()
         } else {
             input().unwrap()
         }
