@@ -182,3 +182,9 @@ pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
         }
     }
 }
+
+
+#[cfg(feature = "typed")]
+pub fn typedenv() {
+    println!("Hello from the typed world");
+}

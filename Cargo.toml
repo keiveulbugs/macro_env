@@ -12,4 +12,12 @@ license = "MIT"
 documentation = "https://docs.rs/macro_env"
 homepage = "https://github.com/keiveulbugs/macro_env"
 
+[features]
+typed = ["dep:ron", "dep:serde"]
+
+
+[dependencies]
+ron = {version = "0.8", optional = true}
+serde = { version = "1", features = ["derive"], optional = true}
+
 

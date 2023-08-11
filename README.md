@@ -3,7 +3,7 @@ Macro_env: An environment variable seeking crate
 
 Macro_env is a crate to find environment variables.  
 Originally designed to easily fetch environment variables from different places without having to change a lot of different code.  
-By simply chainging the SearchType in the macro or in the function, it fetches the variable from a different location.  
+By simply changing the SearchType in the macro or in the function, it fetches the variable from a different location.  
 
 
 ## Usage
@@ -21,7 +21,7 @@ macro_env = "0.1.*"
 ```rust
 // Import the crate, importing the whole crate is the easiest
 // You can also manually import the function you need, for .env search for example:
-// `use macro_env::dotenvreader;`
+// `use macro_env::{dotenvreader, macro_env};`
 use macro_env::*;
 
 // Fetch the environment variable "OS" from the .env file at the cargo.toml level
