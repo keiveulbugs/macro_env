@@ -1,24 +1,23 @@
 #![doc = include_str!("../README.md")]
 
-
 /// `macro_env!()` is used to fetch environment variables.
-/// 
+///
 /// # Example
 /// ```rust
 /// // Import the crate, importing the whole crate is the easiest
 /// // You can also manually import the function you need, for .env search for example:
 /// // `use macro_env::dotenvreader;`
 /// use macro_env::*;
-/// 
+///
 /// // Fetch the environment variable "OS" from the .env file at the cargo.toml level
 /// macro_env!(File, "OS");
 ///
 /// // Fetch the environment variable "OS" from the system environment variables
 /// macro_env!(System, "OS");
-/// 
+///
 /// // Asks the user for enter the input through the terminal
 /// macro_env!(Input);
-/// 
+///
 /// // All, and not specifying the searchtype, will try to find the variable through all 3 methods:
 /// // First it checks for a .env file
 /// // Then by searching for a system variable
@@ -60,11 +59,11 @@ macro_rules! macro_env {
 }
 
 /// Reads the .env file and tries to find the .env variable.
-/// 
+///
 /// # Example
 /// ```rust
 /// use macro_env::dotenvreader;
-/// 
+///
 /// let envvariable :String = dotenvreader("OS".to_string()).unwrap();
 /// ```
 pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
@@ -74,25 +73,24 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     use std::io::BufRead;
 
     for line in reader.lines() {
-        
-
-        if line.is_ok() {
-            let line = line.unwrap();
-            if  line.clone().starts_with('#') {
+        if let Ok(line) = line {
+            if line.clone().starts_with('#') {
                 continue;
             };
             let parts: Vec<&str> = line.splitn(2, '=').collect();
-            if parts.len() == 2 && parts[0] == envvariablename && !parts[1].is_empty() && !line.starts_with('#'){
+            if parts.len() == 2
+                && parts[0] == envvariablename
+                && !parts[1].is_empty()
+                && !line.starts_with('#')
+            {
                 token = parts[1].to_string();
                 break;
             } else {
                 continue;
             }
-
         } else {
             continue;
         }
-
     }
 
     if token.is_empty() {
@@ -112,11 +110,11 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
 
 /// Request user input
 /// `input()` fetches stdin.read_lines() and then trims them.
-/// 
+///
 /// # Example
 /// ```rust
 /// use macro_env::input;
-/// 
+///
 /// // Request the user to input a variable
 /// let envvariable :String = input().unwrap();
 /// ```
@@ -129,11 +127,11 @@ pub fn input() -> Result<String, std::io::Error> {
 }
 
 /// Fetch the environment variable from the system environment variable
-/// 
+///
 /// # Example
 /// ```rust
 /// use macro_env::systemreader;
-/// 
+///
 /// // Using systemreader is just a shortcut for std::env::var()
 /// let envvariable :String = systemreader("OS".to_string()).unwrap();
 /// ```
@@ -152,26 +150,24 @@ pub enum SearchType {
     All,
 }
 
-
-
 /// A function instead of a macro to find the environment variable
-/// 
+///
 /// # Example
 /// ```rust
 /// use macro_env::*;
 /// use macro_env::SearchType::*;
-/// 
+///
 /// // Fetch a variable from .env
 /// let filevariable :String = envseeker(Envfile, "OS");
-/// 
+///
 /// // Fetch a systemvariable
 /// let systemvariable :String = envseeker(System, "OS");
-/// 
+///
 /// // Request user input
 /// let inputvariable :String = envseeker(Input, "OS");
-/// 
+///
 /// // Perform all three methods to find a variable
-/// let allvariable :String = envseeker(All, "OS"); 
+/// let allvariable :String = envseeker(All, "OS");
 /// ```
 pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
     match searchtype {
@@ -180,8 +176,9 @@ pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
         SearchType::Input => input().unwrap(),
         SearchType::All => {
             let resultenv = dotenvreader(envvariablename.to_string());
-            if resultenv.is_ok() {
-                resultenv.unwrap()
+
+            if let Ok(resultenv) = resultenv {
+                resultenv
             } else if systemreader(envvariablename.to_string().clone()).is_ok() {
                 systemreader(envvariablename.to_string()).unwrap()
             } else {
@@ -190,7 +187,6 @@ pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
         }
     }
 }
-
 
 #[cfg(feature = "typed")]
 pub fn typedenv() {
