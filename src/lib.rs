@@ -194,5 +194,5 @@ pub fn envseeker(searchtype: SearchType, envvariablename: &str) -> String {
 
 #[cfg(feature = "typed")]
 pub fn typedenv() {
-    println!("Hello from the typed world");
+    println!("The typed feature is still being made, and not yet ready to use.");
 }
