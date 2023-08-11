@@ -74,17 +74,25 @@ pub fn dotenvreader(envvariablename: String) -> Result<String, std::io::Error> {
     use std::io::BufRead;
 
     for line in reader.lines() {
-        if let Ok(line) = line {
+        
+
+        if line.is_ok() {
+            let line = line.unwrap();
+            if  line.clone().starts_with('#') {
+                continue;
+            };
             let parts: Vec<&str> = line.splitn(2, '=').collect();
-            if parts.len() == 2 && parts[0] == envvariablename && !parts[1].is_empty() {
+            if parts.len() == 2 && parts[0] == envvariablename && !parts[1].is_empty() && !line.starts_with('#'){
                 token = parts[1].to_string();
+                break;
             } else {
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::NotFound,
-                    "Couldn't find the variable requested in the .env",
-                ));
+                continue;
             }
+
+        } else {
+            continue;
         }
+
     }
 
     if token.is_empty() {
